@@ -1,32 +1,24 @@
 package user
 
 import (
+	"example/generics/ginhandlerfunc"
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserRequest struct {
-	Name string `json:"name"`
+	Name string `uri:"name" binding:"required"`
 }
 type UserResponse struct {
 	Name string `json:"name"`
 }
 
-type appContext interface {
-	BindJSON(any) error
-	AbortWithError(int, error) *gin.Error
-	JSON(int, any)
+func UserHandler(request UserRequest) (UserResponse, error) {
+	fmt.Println("UserHandler", request)
+	return UserResponse{Name: request.Name}, nil
 }
 
-func UserHandler(c appContext) {
-	var request UserRequest
-	if err := c.BindJSON(&request); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
-		return
-	}
-
-	fmt.Println("UserHandler", request)
-	c.JSON(http.StatusOK, &UserResponse{Name: request.Name})
+func New() gin.HandlerFunc {
+	return ginhandlerfunc.NewParamOKResponse(UserHandler)
 }
