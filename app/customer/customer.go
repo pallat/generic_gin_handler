@@ -1,7 +1,7 @@
 package customer
 
 import (
-	"example/generics/ginhandlerfunc"
+	"example/generics/app"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -14,11 +14,14 @@ type CustomerResponse struct {
 	Name string `json:"name"`
 }
 
-func CustomerHandler(request CustomerRequest) (CustomerResponse, error) {
+func CustomerHandler(request CustomerRequest) any {
 	fmt.Println("CustomerHandler", request)
-	return CustomerResponse{Name: request.Name}, nil
+	return app.ResponseInternalServerError{
+		Message: "error",
+		Data:    CustomerResponse{Name: request.Name},
+	}
 }
 
 func New() gin.HandlerFunc {
-	return ginhandlerfunc.NewBindRequestOKResponse(CustomerHandler)
+	return app.NewHandler(CustomerHandler)
 }

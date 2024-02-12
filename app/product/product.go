@@ -1,7 +1,7 @@
 package product
 
 import (
-	"example/generics/ginhandlerfunc"
+	"example/generics/app"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
@@ -26,13 +26,16 @@ type Handler struct {
 	store storer
 }
 
-func (h *Handler) SaveProduct(request ProductRequest) (ProductResponse, error) {
+func (h *Handler) SaveProduct(request ProductRequest) any {
 	fmt.Println("ProductHandler", request)
-	return ProductResponse{Name: request.Name}, nil
+	return app.ResponseBadRequest{
+		Message: "badrequest",
+		Data:    ProductResponse{Name: request.Name},
+	}
 }
 
 func New(store storer) gin.HandlerFunc {
 	h := &Handler{store: store}
 
-	return ginhandlerfunc.NewBindRequestOKResponse(h.SaveProduct)
+	return app.NewHandler(h.SaveProduct)
 }

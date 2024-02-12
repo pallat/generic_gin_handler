@@ -1,9 +1,9 @@
 package main
 
 import (
-	"example/generics/domain/customer"
-	"example/generics/domain/product"
-	"example/generics/domain/user"
+	"example/generics/app/customer"
+	"example/generics/app/product"
+	"example/generics/app/user"
 
 	"github.com/gin-gonic/gin"
 )
